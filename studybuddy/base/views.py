@@ -66,8 +66,9 @@ def home(request):
     
     topics = Topic.objects.all()
     room_count = rooms.count()
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
 
-    context = {'rooms':rooms, 'topics':topics, 'room_count': room_count}
+    context = {'rooms':rooms, 'topics':topics, 'room_count': room_count, 'room_messages': room_messages}
     return render(request,"base/home.html", context)
 
 
@@ -85,7 +86,7 @@ def room(request, pk):
         return redirect('room',pk=pk)
 
 
-    room_messages = room.message_set.all().order_by('-created')
+    room_messages = room.message_set.all()
     participants = room.participants.all()
     context = {'room' : room, 'room_messages': room_messages, 'participants': participants}
 
